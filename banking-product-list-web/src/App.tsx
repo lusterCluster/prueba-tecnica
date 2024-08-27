@@ -1,3 +1,5 @@
+import Layout from "./pages/layout/Layout"
+import ProductList from "./pages/products/ProductList"
 
 function App() {
 
@@ -5,9 +7,9 @@ function App() {
   return (
     <>
   
-    <h1 className="text-3xl font-bold underline text-red-800">
-      Hello world!
-    </h1>
+    <Layout>
+      <ProductList/>
+    </Layout>
   
 
     </>
