@@ -6,7 +6,7 @@ function useMutation<T>(initialState:any)  {
   
   const [state, dispatch] = useReducer(stateMutation.stateReducer, initialState)
   
-  const handleStateMutation = (payload:T, type:ActionTypes) => {
+  const handleStateMutation = (payload:T | string, type:ActionTypes) => {
     dispatch(
       {
         type:type,

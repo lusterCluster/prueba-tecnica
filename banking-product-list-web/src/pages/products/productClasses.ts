@@ -2,9 +2,8 @@ export const ProductClasses = {
     productList:{
         container: {        
             display:`grid 
-                        sm:grid-cols-1 
-                        md:grid-cols-12 
-                        lg:grid-cols-12`,
+                        grid-cols-1 `,
+                        width: 'w-fit'
         },
         mobileHeaderContainer: {            
             visible:"visible sm:invisible",

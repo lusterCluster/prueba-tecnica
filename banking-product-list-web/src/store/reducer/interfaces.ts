@@ -2,7 +2,8 @@
 export const ACTIONS = {
   ADDED: 'ADDED',
   CHANGED: 'CHANGED',
-  DELETED: 'DELETED'
+  DELETED: 'DELETED',
+  SEARCH: 'SEARCH'
 } as const;
 
 // Type alias for action types, derived from the ACTIONS object

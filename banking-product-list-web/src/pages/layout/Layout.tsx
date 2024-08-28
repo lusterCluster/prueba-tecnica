@@ -1,14 +1,13 @@
 import React, { FC } from "react";
 import { layout } from "./layoutClasses";
 import useTailwindClassConverter from "../../hooks/tailwind/useTailwindConverter";
-
 type Props = {
   children: React.ReactNode;
 };
 
 
 
-const Layout: FC<Props> = ({ children }) => {
+const Layout: FC<Props> = ({ children }) => {  
   return (
     <>
       <div

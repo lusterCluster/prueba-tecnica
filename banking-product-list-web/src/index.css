@@ -10,3 +10,27 @@
       src: url(/fonts/Roboto.woff2) format('woff2');
     }
   }
+
+  :root {
+    background-color: #C3E0E5;
+  }
+  .desktop {
+    display: grid;
+    padding: 16px;
+    grid-template-columns: repeat(5, 1fr);
+    place-items: center;
+  }
+  
+  .mobile {
+    display: none;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .desktop {
+      display: none;
+    }
+  
+    .mobile {
+      display: grid;
+    }
+  }

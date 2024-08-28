@@ -1,19 +1,20 @@
-import Layout from "./pages/layout/Layout"
-import ProductList from "./pages/products/ProductList"
+import ProductListDesktop from "./pages/products/ProductListDesktop";
+import ProductListMobile from "./pages/products/ProductListMobile";
+import ProvideGlobalContext from "./store/context/Global";
 
 function App() {
-
-
   return (
     <>
-  
-    <Layout>
-      <ProductList/>
-    </Layout>
-  
-
+      <ProvideGlobalContext>
+        <div className="mobile">
+          <ProductListMobile />
+        </div>
+        <div className="desktop">
+          <ProductListDesktop />
+        </div>
+      </ProvideGlobalContext>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
