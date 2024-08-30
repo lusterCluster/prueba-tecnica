@@ -19,14 +19,14 @@ const ProductMobile: React.FC<Props> = ({ fields }) => {
         <p>{fields.description}</p>
       </section>
       <section className="flex-col col-span-2">
-        <span className="flex-col" >
+        <span className="flex-col">
           <p className="font-bold">Registrado</p>
           <p>{formatDate(fields.date_release)}</p>
         </span>
-      <span className="flex-col gap-3">
-        <p className="font-bold">Reestructurado</p>
-        <p>{formatDate(fields.date_revision)}</p>
-      </span>
+        <span className="flex-col gap-3">
+          <p className="font-bold">Reestructurado</p>
+          <p>{formatDate(fields.date_revision)}</p>
+        </span>
       </section>
       <span className="material-symbols-sharp text-4xl">more_vert</span>
     </div>

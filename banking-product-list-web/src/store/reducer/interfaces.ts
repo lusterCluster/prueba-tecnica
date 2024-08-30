@@ -3,7 +3,9 @@ export const ACTIONS = {
   ADDED: 'ADDED',
   CHANGED: 'CHANGED',
   DELETED: 'DELETED',
-  SEARCH: 'SEARCH'
+  FETCH: 'FETCH',
+  FILTER: 'FILTER',
+  PAGINATE: 'PAGINATE'
 } as const;
 
 // Type alias for action types, derived from the ACTIONS object
@@ -29,7 +31,7 @@ export interface IAction<P = any> {
 * @param action - An action describing what mutation is to be applied.
 * @returns The new state after applying the mutation.
 */
-export interface IMutation<T extends PropertyKey> {
+export interface IMutation<T> {
   stateReducer: (state: StateType<T>, action: IAction) => StateType<T>;
 }
 
@@ -39,8 +41,8 @@ export interface IMutation<T extends PropertyKey> {
 * @template S - The type of keys in the state.
 * @property [key in S] - Each key in the state is of type S[keyof S], ensuring the state adheres to the defined structure.
 */
-export type IState<S extends PropertyKey> = {
-  readonly [key in S]: S[keyof S];
+export type IState<S> = {
+  [Property in keyof S]: S[keyof S];
 }
 
 /**
@@ -51,4 +53,4 @@ export type IState<S extends PropertyKey> = {
 * 
 * Note: A type is a set of valid inputs. StateType<T> ensures that the state conforms to the defined structure.
 */
-export type StateType<T extends PropertyKey> = IState<T>[];
+export type StateType<T> = IState<T>[];

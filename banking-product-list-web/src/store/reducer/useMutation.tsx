@@ -1,10 +1,11 @@
 import { useReducer } from "react"
-import { stateMutation } from "./mutationReducer"
+import { productMutation } from "./mutationReducer"
 import { ActionTypes } from "./interfaces"
+
 
 function useMutation<T>(initialState:any)  {
   
-  const [state, dispatch] = useReducer(stateMutation.stateReducer, initialState)
+  const [state, dispatch] = useReducer(productMutation.stateReducer, initialState)
   
   const handleStateMutation = (payload:T | string, type:ActionTypes) => {
     dispatch(

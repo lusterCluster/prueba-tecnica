@@ -1,26 +1,23 @@
-import { ProductClasses } from "./productClasses";
+
 import MobileHeader from "../../components/mobile/MobileHeader";
-import {
-  IProduct,
-  
-} from "../../rest/productListService";
+import { IProduct, ProductType } from "../../rest/productListService";
 import { convertToTailwindClass } from "../../util/tailwind/classConverter";
 import ProductMobile from "../../components/mobile/ProductMobile";
-import { useGlobalContext } from "../../store/context/Global";
+import { FC } from "react";
+import { ProductClasses } from "../../pages/products/productClasses";
 
+type Props = {
+  productList: ProductType;
+};
 
-const ProductListMobile = () => {  
-const {state} = useGlobalContext()
-  if (state.length === 0) {
-    return <>Loading ...</>;
-  }
+const ProductListMobile: FC<Props> = ({ productList }) => {
   return (
     <div
       className={convertToTailwindClass(ProductClasses.productList.container)}
     >
       <MobileHeader />
       <div className="visible sm:invisible mt-[56px]"></div>
-      {state[0].map((product: IProduct) => (
+      {productList.map((product: IProduct) => (
         <ProductMobile fields={product} />
       ))}
     </div>

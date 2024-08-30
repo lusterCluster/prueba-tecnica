@@ -1,34 +1,41 @@
+import { IProduct, ProductType } from "../../rest/productListService";
 import { ACTIONS, IAction, IMutation, StateType } from "./interfaces";
 
-export const stateMutation: IMutation<any> = {
-  stateReducer: (state: StateType<any>, action: IAction): StateType<any> => {
+export const productMutation: IMutation<IProduct> = {
+  stateReducer: (
+    state: StateType<IProduct>,
+    action: IAction
+  ): StateType<IProduct> => {
     switch (action.type) {
-      case ACTIONS.SEARCH: {        
-        const minLength = 5;
-        return state.filter(item => {
-          const isMatch = (field: string) => {
-            for (let i = 0; i <= field.length - minLength; i++) {
-              const substring = field.slice(i, i + minLength);
-              if (action.payload.searchString.includes(substring)) {
-                return true;
-              }
-            }
-            return false;
-          };
-
-          return isMatch(item.name) || isMatch(item.description);
-        });
-      }
+      case ACTIONS.FETCH:
+        return action.payload;
       case ACTIONS.ADDED:
         return [...state, action.payload];
       case ACTIONS.CHANGED:
-        return state.map(item => item.id === action.payload.id ? action.payload : item);
+        return state.map((product) =>
+          product.id === action.payload.id ? action.payload : product
+        );
       case ACTIONS.DELETED:
-        return state.filter(item => item.id !== action.payload.id);
+        return state.filter((product) => product.id !== action.payload.id);
+        case ACTIONS.FILTER:
+          const filteredState = state.filter((product) => {
+            const isMatch = () =>
+              product.name.toLowerCase().includes(action.payload.toLowerCase()) ||
+              product.description.toLowerCase().includes(action.payload.toLowerCase()) ||
+              product.date_release.toLowerCase().includes(action.payload.toLowerCase()) ||
+              product.date_revision.toLowerCase().includes(action.payload.toLowerCase());
+            
+            return isMatch();
+          });
+  
+          // Si no hay coincidencias, devolver todo el estado sin filtrar
+          return filteredState.length > 0 ? filteredState : state;
+          case ACTIONS.PAGINATE:
+            return state.slice(0,action.payload)
       default:
         return state;
     }
-  }
+  },
 };
 
 

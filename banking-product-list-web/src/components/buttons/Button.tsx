@@ -5,15 +5,17 @@ type Props = {
   type: ButtonType
   text: string;
   color: ColorType;
+  onClick?: () => void
 };
-const Button: FC<Props> = ({ text, color, type }) => {
+const Button: FC<Props> = ({ text, color, type, onClick}) => {
   const buttonColor =
     color === "primary" ? "bg-onSurface" : color === "secondary" ? "bg-white" : "";
   const textColor = color === "primary" ? "text-white" : color === "secondary" ? "text-onSurface" : "";
   return (
     <button
       type={type}
-      className={`w-[116px] h-[40px] ${buttonColor}  ${textColor}`}
+      onClick={onClick}
+      className={`w-[330px] h-[40px] ${buttonColor}  ${textColor}`}
     >
       {text}
     </button>

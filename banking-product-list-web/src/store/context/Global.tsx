@@ -11,17 +11,19 @@ const useProvideContext = () => useContext(GlobalContext)
 export const useGlobalContext = () => {
     const { state, handleStateMutation } = useMutation<IProduct[]>(placeholder);  
     const [error, setError] = useState(false);
-    useEffect(() => {    
-      fetchProductList()
+    const [loading, setloading] = useState(false);
+    useEffect(() => {            
+        setloading(true)
+        fetchProductList()
         .then((products) => {
-              handleStateMutation([...products], ACTIONS.ADDED)
-        })
+              handleStateMutation([...products], ACTIONS.FETCH)
+        }).finally(() => setloading(false))
         .catch((error) => {
           console.error("Error:", error);
           setError(true);
         })      
-    }, [fetchProductList]);
-    return {state, handleStateMutation, error, setError}
+    }, []);
+    return {state, handleStateMutation, error, setError, loading}
 }
 type ProviderProps = {
     children: React.ReactNode    

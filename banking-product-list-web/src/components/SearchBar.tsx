@@ -1,55 +1,60 @@
-import React, { useState } from "react";
-import { useGlobalContext } from "../store/context/Global";
-import { ACTIONS } from "../store/reducer/interfaces";
+import { ChangeEvent, FC, useState } from "react";
+import { ACTIONS, ActionTypes } from "../store/reducer/interfaces";
+import { fetchProductList, IProduct, ProductType } from "../rest/productListService";
 
-type Props = {};
+type Props = {
+  state: ProductType;
+  handleStateMutation: (
+    payload: string | IProduct[],
+    type: ActionTypes
+  ) => void;
+};
 
-const SearchBar = (props: Props) => {
-  const { state, handleStateMutation } = useGlobalContext();
-  function isMatching(event: React.ChangeEvent<HTMLInputElement>, searchString: string): boolean {
-    return event.target.value === searchString;
-  }
-  const [inputValue, setInputValue] = useState('');
-
-
+const SearchBar: FC<Props> = ({ handleStateMutation }) => {
   
-  if (state.length === 0) {
-    return (
+const [inputValue, setInputValue] = useState("")
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value)
+    const searchTerm = event.target.value;
+    handleStateMutation(searchTerm, ACTIONS.FILTER);
+  };
+  
+  const handleCleanSearch = () => {
+    setInputValue("")
+    fetchProductList()
+      .then((products) => {
+        console.log("handleCleanSearch called");
+        handleStateMutation([...products], ACTIONS.FETCH); // Llenar el estado con los productos
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  return (
+    <>
       <div
         id="container"
-        className="bg-background h-[32px] w-[181px] flex gap-2 p-1 rounded-[6px] "
+        className="bg-background h-[32px] w-[181px] gap-[3px] flex p-[5px] rounded-[6px]"
       >
-        <span className="material-symbols-outlined">search</span>
+        <span className="material-symbols-outlined text-disabled">search</span>
         <input
-          className="bg-background focus:outline-none h-[27px] w-[114px]"
+          onChange={handleInputChange}          
+          value={inputValue}
+          className="bg-background focus:outline-none w-[114px]"
           placeholder="Search..."
         />
-      </div>
-    );
-  } else {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(event.target.value);    
-        handleStateMutation(inputValue, ACTIONS.SEARCH)
-      
-    };
-    
-      return (
-        <>
-          <div    
-            id="container"
-            className="bg-background h-[32px] w-[181px] flex gap-2 p-1 rounded-[6px] "
+        
+          <button
+            onClick={handleCleanSearch}
+            className="material-symbols-outlined text-md text-disabled"
           >
-            <span className="material-symbols-outlined">search</span>
-            <input
-              // onChange={(e) => handleChange(e)}
-              className="bg-background focus:outline-none h-[27px] w-[114px]"
-              placeholder="Search..."
-            />
-          </div>
-        </>
-      );
-  }
- 
+            close
+          </button>
+        
+      </div>
+    </>
+  );
 };
 
 export default SearchBar;

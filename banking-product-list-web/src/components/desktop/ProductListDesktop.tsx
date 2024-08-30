@@ -1,18 +1,19 @@
-
-import {
-  IProduct,
-} from "../../rest/productListService";
-import ProductDesktop from "../../components/desktop/ProductDesktop";
-import SearchBar from "../../components/SearchBar";
-import { useGlobalContext } from "../../store/context/Global";
-
+import { IProduct, ProductType } from "../../rest/productListService";
+import Divider from "../divider/Divider";
+import ProductDesktop from "./ProductDesktop";
+import { FC } from "react";
+import { Link } from "react-router-dom";
 
 const ListBar = () => {
   return (
     <>
       <div className="col-span-6 w-full flex justify-between">
-        <SearchBar />
-        <span className="material-symbols-sharp text-4xl">add_circle</span>
+        <div id="searchbar-portal"></div>
+        <Link to={"/add-product"}>
+          <p className="material-symbols-sharp  text-primary text-4xl">
+            add_circle
+          </p>
+        </Link>
       </div>
     </>
   );
@@ -37,31 +38,21 @@ const Header = () => {
     </div>
   );
 };
-const ProductListDesktop = () => {
-    const { state } = useGlobalContext();
-
-  if (state.length === 0) {
-    return <>Loading ...</>;
-  }
+type Props = {
+  productList: ProductType;
+};
+const ProductListDesktop: FC<Props> = ({ productList }) => {
   return (
-    <>
-      <div
-        id="container"
-        className="p-6 bg-white rounded-[26px] w-fit h-[850px] col-span-5"
-      >
+    <>      
         <ListBar />
         <Header />
-        <div
-          id="grid"
-          className="grid gap-y-2 grid-cols-6 grid-rows-12"
-        >
-          {state[0].map((product: IProduct) => (
+        <div id="grid" className="grid gap-y-2 grid-cols-6 ">
+          {productList.map((product: IProduct) => (
             <>
-              <ProductDesktop fields={product} />
+              <ProductDesktop product={product} />
             </>
-          ))}
-        </div>
-      </div>
+          ))}          
+        </div>                
     </>
   );
 };
