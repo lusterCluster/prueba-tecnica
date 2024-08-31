@@ -86,7 +86,7 @@ const ProductForm = (props: Props) => {
         send = true;
       }      
     });
-    send = validateStringLength(formData.id, 3, 5) ? true:false
+    send = validateStringLength(formData.id, 3, 10) ? true:false
     if (!send) {
         setIsValid(prev=> ({...prev, id:false}))
     }
