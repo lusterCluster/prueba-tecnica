@@ -18,7 +18,7 @@ const ProductListMobile: FC<Props> = ({ productList }) => {
       <MobileHeader />
       <div className="visible sm:invisible mt-[56px]"></div>
       {productList.map((product: IProduct) => (
-        <ProductMobile fields={product} />
+        <ProductMobile product={product} />
       ))}
     </div>
   );

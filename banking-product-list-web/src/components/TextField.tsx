@@ -39,7 +39,7 @@ const TextField: FC<Props> = ({ type, name, handleChange, value, isValid, form }
             value={form === "add" ? undefined : name === "date_release" ? toDate(value) : value}
             onChange={handleChange}
           />
-          <p className={` text-onError `}>{"Este campo es requerido"}</p>
+          <p className={` text-onError `}>{"El campo es inválido"}</p>
         </>
       )}
     </span>

@@ -5,6 +5,7 @@ import { IProduct, requestPOST_PUTService } from "../rest/productListService";
 import { PATHS } from "../routes/main";
 import TextField, { FormTypes } from "./TextField";
 import Button from "./buttons/Button";
+import { isDateGreaterOrEqual, isOneYearLater } from "../util/date/dateValidator";
 
 type Props = {};
 type IValidInputs = {
@@ -44,6 +45,7 @@ const ProductForm = (props: Props) => {
   );
   const [isValid, setIsValid] = useState(validInputs);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const handleReset = () => setIsValid(validInputs)
   const validateValues = (inputValues: IProduct): IValidInputs => {
     return {
       id: Boolean(inputValues.id),
@@ -54,6 +56,10 @@ const ProductForm = (props: Props) => {
       date_revision: Boolean(inputValues.date_revision),
     };
   };
+  function validateStringLength(str: string, minLength: number, maxLength: number): boolean {
+    const length = str.length;
+    return length > minLength && length < maxLength;
+  }
   const getFormType = ():FormTypes =>
     location.pathname === PATHS["/add-product"]
       ? "add"
@@ -72,15 +78,34 @@ const ProductForm = (props: Props) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const validation = validateValues(formData);
-    console.log(validation);
+    const validation = validateValues(formData);    
     setIsValid(validation);
     let send = false;
-    Object.values(validation).forEach((value) => {
+    Object.values(validation).forEach((value, i) => {
       if (value === true) {
         send = true;
-      }
+      }      
     });
+    send = validateStringLength(formData.id, 3, 5) ? true:false
+    if (!send) {
+        setIsValid(prev=> ({...prev, id:false}))
+    }
+    send = validateStringLength(formData.name, 5, 100) ? true:false
+    if (!send) {
+        setIsValid(prev=> ({...prev, name:false}))
+    }
+    send = validateStringLength(formData.description, 10, 200) ? true:false
+    if (!send) {
+        setIsValid(prev=> ({...prev, description:false}))
+    }
+    send = isDateGreaterOrEqual(formData.date_release)
+    if (!send) {
+        setIsValid(prev=> ({...prev, date_realese:false}))
+    }
+    send = isOneYearLater(formData.date_release, formData.date_revision)
+    if (!send) {
+        setIsValid(prev=> ({...prev, date_revision:false}))
+    }
 
     if (send) {
       try {        
@@ -160,7 +185,7 @@ const ProductForm = (props: Props) => {
             value={formData.date_revision}
             handleChange={handleChange}
           />
-          <Button type="reset" text="Reiniciar" color="primary" />
+          <Button onClick={handleReset} type="reset" text="Reiniciar" color="primary" />
           <Button type="submit" text="Enviar" color="secondary" />
         </form>
       </div>
