@@ -1,6 +1,10 @@
 import { ChangeEvent, FC, useState } from "react";
 import { ACTIONS, ActionTypes } from "../store/reducer/interfaces";
-import { fetchProductList, IProduct, ProductType } from "../rest/productListService";
+import {
+  fetchProductList,
+  IProduct,
+  ProductType,
+} from "../rest/productListService";
 
 type Props = {
   state: ProductType;
@@ -11,21 +15,21 @@ type Props = {
 };
 
 const SearchBar: FC<Props> = ({ handleStateMutation }) => {
-  
-const [inputValue, setInputValue] = useState("")
+  const [inputValue, setInputValue] = useState("");
+  const [showCloseButton, setShowCloseButton] = useState(false)
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value)
+    setInputValue(event.target.value);
     const searchTerm = event.target.value;
     handleStateMutation(searchTerm, ACTIONS.FILTER);
   };
-  
+  const handleOnFocus = () => { console.log("on focus"); setShowCloseButton(true)}
   const handleCleanSearch = () => {
-    setInputValue("")
+    setInputValue("");
     fetchProductList()
       .then((products) => {
         console.log("handleCleanSearch called");
         handleStateMutation([...products], ACTIONS.FETCH); // Llenar el estado con los productos
-      })
+      }).finally(() => setShowCloseButton(false))
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -39,19 +43,19 @@ const [inputValue, setInputValue] = useState("")
       >
         <span className="material-symbols-outlined text-disabled">search</span>
         <input
-          onChange={handleInputChange}          
+          onFocus={handleOnFocus}
+          onChange={handleInputChange}
           value={inputValue}
           className="bg-background focus:outline-none w-[114px]"
           placeholder="Search..."
         />
-        
-          <button
-            onClick={handleCleanSearch}
-            className="material-symbols-outlined text-md text-disabled"
-          >
-            close
-          </button>
-        
+{ showCloseButton &&
+        <button
+          onClick={handleCleanSearch}          
+          className="material-symbols-outlined text-md text-disabled"
+        >
+          close
+        </button>}
       </div>
     </>
   );

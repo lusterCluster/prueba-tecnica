@@ -37,10 +37,10 @@ export const productMutation: IMutation<IProduct> = {
         // Si no hay coincidencias, devolver todo el estado sin filtrar
         return filteredState.length > 0 ? filteredState : state;
       case ACTIONS.PAGINATE:
-        if (action.payload > state.length) {
-          return state;
+        if (action.payload.option > state.length) {
+          return action.payload.persistedState;
         }
-        return state.slice(0, action.payload);
+        return state.slice(0, action.payload.option);
       default:
         return state;
     }

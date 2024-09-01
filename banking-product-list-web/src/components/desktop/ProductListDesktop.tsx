@@ -1,5 +1,4 @@
 import { IProduct, ProductType } from "../../rest/productListService";
-import Divider from "../divider/Divider";
 import ProductDesktop from "./ProductDesktop";
 import { FC } from "react";
 import { Link } from "react-router-dom";
@@ -48,9 +47,9 @@ const ProductListDesktop: FC<Props> = ({ productList }) => {
         <Header />
         <div id="grid" className="grid gap-y-2 grid-cols-6 ">
           {productList.map((product: IProduct) => (
-            <>
+            <div key={product.id} className="grid grid-cols-12 col-span-6 place-items-center border-[0.5px] border-solid border-onSurface">
               <ProductDesktop product={product} />
-            </>
+            </div>            
           ))}          
         </div>                
     </>

@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import  { FC, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { IProduct } from "../../rest/productListService";
 import { PATHS, PathTypes } from "../../routes/main";
 
@@ -12,16 +12,33 @@ type Props = {
 
 const DropDown: FC<Props> = ({ isOpen, product, handleDelete, onClose}) => {
   const navigate = useNavigate();
+  const ref = useRef<HTMLDivElement>(null)
   const handleRedirect = (path: PathTypes) =>
     navigate(path, { state: product });
   const handleOnDelete = () => {    
     onClose()
     handleDelete()
   }
+// useEffect(() => {
+//   const handleClick = (event: MouseEvent) => {
+//     if (ref.current && !ref.current.contains(event.target as HTMLDivElement) && isOpen) {      
+//       onClose()
+//     }
+
+//   }
+//   document.addEventListener('click', handleClick)
+
+//     return () => {
+//       document.removeEventListener('click', handleClick)
+//     }
+// }, [])
+
+
   return (
     <>
       {isOpen && (
         <div
+          ref={ref}
           id="dropdown"
           className=" absolute right-0 z-10 text-white  bg-secondaryOnSurface divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
         >

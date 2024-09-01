@@ -21,7 +21,8 @@ const ProductDesktop: React.FC<Props> = ({ product }) => {
   return (
 
     
-    <div className="grid grid-cols-12 col-span-6 place-items-center border-[0.5px] border-solid border-onSurface">
+<>
+
       <Modal onClose={closeModal} id={product.id} productName={product.name} isOpen={showModal}/>
       <img
         className="bg-background my-2 col-span-3 w-[72px] h-[72px] rounded-full object-cover col-start-1"
@@ -41,7 +42,8 @@ const ProductDesktop: React.FC<Props> = ({ product }) => {
         </button>
         <DropDown onClose={closeMenu}  handleDelete={handleDelete}  product={product} isOpen={showMenu} />
       </div>
-    </div>
+</>    
+
   );
 };
 

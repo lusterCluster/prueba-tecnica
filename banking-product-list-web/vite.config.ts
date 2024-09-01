@@ -10,8 +10,11 @@ export default defineConfig({
         target: 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net',
         changeOrigin: true,
         secure: false,
+        rewrite: path => path.replace(/^\/api/, "")
       },
     },
+    host: true,
+    strictPort: true,
   },
   css: {
     postcss: {

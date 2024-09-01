@@ -1,20 +1,25 @@
 import React, { FC, useState } from "react";
 import DropDownPagination from "../DropDown/DropDownPagination";
-import { ACTIONS, ActionTypes } from "../../store/reducer/interfaces";
+import { ACTIONS, ActionTypes, StateType } from "../../store/reducer/interfaces";
+import { IProduct } from "../../rest/productListService";
+import { useNavigation } from "react-router-dom";
 
-export type PaginationTypes = "5" |"10" |"20" 
+export type PaginationTypes = "5" |"10" |"20" | " "
 type Props = {
-    handleStateMutation:  (payload: string, type: ActionTypes) => void
+    handleStateMutation:  (payload: any, type: ActionTypes) => void
+    state: StateType<IProduct>
 };
 
-const ProductFooterDesktop:FC<Props> = ({handleStateMutation}) => {
-    const [pagination, setPagination] = useState<PaginationTypes>("5")
+const ProductFooterDesktop:FC<Props> = ({handleStateMutation, state}) => {
+    const [pagination, setPagination] = useState<PaginationTypes>(" ")
     const [showMenu, setshowMenu] = useState(false)
+    const [persistedState, setPersistedState] = useState(state)
     const toggleMenu = () => setshowMenu(!showMenu)
     const closeMenu = () => setshowMenu(false)
     const handleSelect = (selectedOption: PaginationTypes) => {
         setPagination(selectedOption); 
-        handleStateMutation(selectedOption, ACTIONS.PAGINATE)
+        const payload = {option: selectedOption, persistedState: persistedState}
+        handleStateMutation(payload, ACTIONS.PAGINATE)
       };
   return (
     <>

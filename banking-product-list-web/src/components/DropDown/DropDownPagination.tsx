@@ -27,7 +27,7 @@ const DropDownPagination: FC<Props> = ({
       {isOpen && (
         <div
           id="dropdown"
-          className=" absolute right-0 z-10 text-white  bg-secondaryOnSurface divide-y divide-gray-100 rounded-lg shadow w-[55px] dark:bg-gray-700"
+          className=" absolute  mr-[15%] z-10 text-white  bg-secondaryOnSurface divide-y divide-gray-100 rounded-lg shadow w-[55px] dark:bg-gray-700"
         >
           <ul
             className="py-2 text-sm text-gray-700 dark:text-gray-200"

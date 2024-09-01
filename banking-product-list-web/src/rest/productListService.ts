@@ -1,5 +1,5 @@
 const apiUrl = "https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros/bp/products/"
-type HTTPMethods = "POST" | "PUT"  
+export type HTTPMethods = "POST" | "PUT" | "GET" | "DELETE" 
 export interface IProduct {
     id: string;
     name: string;
@@ -51,7 +51,6 @@ export async function deleteProduct(id: string): Promise<void> {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
           'AuthorId': authorId

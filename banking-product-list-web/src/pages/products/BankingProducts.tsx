@@ -32,7 +32,7 @@ const BankingProducts = () => {
           <ProductListDesktop productList={state} />
           <div className="col-span-5 my-[21px]">
             <Divider fullWidht={true} isActive="active" vertical={false} />
-            <ProductFooterDesktop handleStateMutation={handleStateMutation} />
+            <ProductFooterDesktop state={state} handleStateMutation={handleStateMutation} />
           </div>
         </div>
       </div>
