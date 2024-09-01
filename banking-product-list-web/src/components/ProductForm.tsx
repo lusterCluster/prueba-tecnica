@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IProduct, requestPOST_PUTService } from "../rest/productListService";
 import { PATHS } from "../routes/main";
 import TextField, { FormTypes } from "./TextField";
@@ -79,7 +79,11 @@ const errorMessagesInitial: FormErrorMessageTypes = {
 };
 const ProductForm = () => {
   const location = useLocation();
-  const {productRequestMessage, handleProductRequestMessage, handldeCloseSnackBar} = useGlobalContext()
+  const {
+    productRequestMessage,
+    handleProductRequestMessage,
+    handldeCloseSnackBar,
+  } = useGlobalContext();
   const [formData, setFormData] = useState<IProduct>(
     location.pathname === PATHS["/add-product"]
       ? initialState
@@ -120,11 +124,12 @@ const ProductForm = () => {
       : location.pathname === PATHS["/edit-product"]
       ? true
       : true;
-  const getHttpMethod = () => location.pathname === PATHS["/add-product"]
-  ? "POST"
-  : location.pathname === PATHS["/edit-product"]
-  ? "PUT"
-  : "POST"    
+  const getHttpMethod = () =>
+    location.pathname === PATHS["/add-product"]
+      ? "POST"
+      : location.pathname === PATHS["/edit-product"]
+      ? "PUT"
+      : "POST";
   const getFormType = (): FormTypes =>
     location.pathname === PATHS["/add-product"]
       ? "add"
@@ -248,10 +253,10 @@ const ProductForm = () => {
         const result = await requestPOST_PUTService(
           formData,
           getHttpMethod()
-        ).then(() => handleProductRequestMessage(getHttpMethod(),false));
+        ).then(() => handleProductRequestMessage(getHttpMethod(), false));
         console.log("Producto añadido con éxito:", result);
       } catch (error) {
-        handleProductRequestMessage("POST", true)        
+        handleProductRequestMessage(getHttpMethod(), true);
       }
     } else {
       console.log("invalid inputs");
@@ -259,15 +264,27 @@ const ProductForm = () => {
   };
 
   return (
-    <>            
-        <Snackbar onClose={handldeCloseSnackBar} productRequestMessage={productRequestMessage}/>      
-      <div className="bg-primary text-white grid text-[32px]">
-        <p className="text-center">Formulario de Registro</p>
+    <>
+      <Snackbar
+        onClose={handldeCloseSnackBar}
+        productRequestMessage={productRequestMessage}
+      />
+      <div className="bg-primary text-white grid   text-[32px]">
+        <div className="grid grid-cols-12 place-items-center ">
+          <Link to={PATHS["/products"]}>
+            <span className="material-symbols-outlined text-white">
+              arrow_back
+            </span>
+          </Link>
+          <p className="text-center col-start-5 col-span-4">
+            Formulario de Registro
+          </p>
+        </div>
       </div>
       <div className="p-[9px] grid place-items-center">
         <form
           onSubmit={handleSubmit}
-          className="grid gap-[32px] mt-[21px] p-[9px] md:grid-cols-2 lg:grid-cols-2 grid-rows-6 place-items-center md:w-[910px] lg:w-[910px]"
+          className="grid gap-[32px] md:bg-white lg:bg-white rounded-[13px] pt-10 mt-[21px] p-[9px] md:grid-cols-2 lg:grid-cols-2 grid-rows-5 place-items-center md:w-[910px] lg:w-[910px]"
         >
           <TextField
             form={getFormType()}

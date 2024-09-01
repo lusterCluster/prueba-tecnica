@@ -9,8 +9,8 @@ type Props = {
 };
 const Button: FC<Props> = ({ text, color, type, onClick}) => {
   const buttonColor =
-    color === "primary" ? "bg-onSurface  hover:bg-secondaryOnSurface" : color === "secondary" ? "bg-white hover:bg-secondaryOnSurface " : "";
-  const textColor = color === "primary" ? "text-white " : color === "secondary" ? "text-onSurface hover:text-white " : "";
+    color === "primary" ? "bg-onSurface  hover:bg-secondaryOnSurface" : color === "secondary" ? "bg-disabled hover:bg-secondaryOnSurface " : "";
+  const textColor = color === "primary" ? "text-white " : color === "secondary" ? "text-white hover:text-white " : "";
   return (
     <button
       type={type}

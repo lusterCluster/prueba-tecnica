@@ -14,7 +14,7 @@ function App() {
               Prueba Técnica
             </p>
             <p className="text-center text-onSurface text-[55px] hover:text-white">
-              Frontend – React (2023)
+              Frontend – React (2024)
             </p>
             <Divider fullWidht={true} isActive="active" vertical={false} />
             <Link className="flex justify-center my-[21px] " to={PATHS["/products"]}>
