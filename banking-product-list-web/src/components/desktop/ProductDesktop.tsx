@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IProduct } from "../../rest/productListService";
 import { formatDate } from "../../util/date/dateParser";
-import DropDown from "../DropDown/DropDown";
+import DropDown from "../dropdown/DropDown";
 import Modal from "../Modal";
 type Props = {
   product: IProduct;

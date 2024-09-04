@@ -2,11 +2,13 @@ import React, { FC } from "react";
 import { IProduct } from "../rest/productListService";
 import { HEADINGS, HeadingTypes } from "./desktop/ProductListDesktop";
 import { toDate } from "../util/date/dateParser";
-import { ErrorMessageTypes } from "./ProductForm";
+import { ErrorMessageTypes } from "./form/product/interfaces";
+
 export type FormTypes = "add" | "edit" | undefined;
 type Props = {
   type: React.HTMLInputTypeAttribute;
-  errorMessage: ErrorMessageTypes
+  errorMessage: ErrorMessageTypes;
+  disabled?: boolean
   name: keyof IProduct;
   value: string;
   isValid: boolean;
@@ -19,6 +21,7 @@ type Props = {
 const TextField: FC<Props> = ({
   type,
   errorMessage,
+  disabled,
   name,
   handleChange,
   value,
@@ -54,6 +57,7 @@ const TextField: FC<Props> = ({
           <input
             className={` border-onSurface bg-background focus:outline-secondaryOnSurface border-[0.5px] border-solid rounded-[5px] h-[40px] w-[320px] px-[9px]`}
             type={type}
+            disabled={disabled}
             name={name}
             value={form === "add"
               ? undefined
@@ -70,6 +74,7 @@ const TextField: FC<Props> = ({
             className={` border-onError  bg-background focus:outline-secondaryOnSurface border-[0.5px] border-solid rounded-[5px] h-[40px] w-[320px] px-[9px]`}
             type={type}
             name={name}
+            disabled={disabled}
             value={
               form === "add"
               ? undefined

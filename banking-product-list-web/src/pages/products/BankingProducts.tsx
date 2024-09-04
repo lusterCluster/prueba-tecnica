@@ -8,6 +8,7 @@ import ProductFooterDesktop from "../../components/desktop/ProductFooterDesktop"
 
 const BankingProducts = () => {
   const { state, handleStateMutation, loading } = useGlobalContext();
+  
   if (loading) {
     return <>Loading ...</>;
   }

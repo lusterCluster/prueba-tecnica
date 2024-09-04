@@ -1,10 +1,11 @@
 import { ChangeEvent, FC, useState } from "react";
 import { ACTIONS, ActionTypes } from "../store/reducer/interfaces";
 import {
-  fetchProductList,
+  
   IProduct,
   ProductType,
 } from "../rest/productListService";
+import useProductService from "../hooks/service/useProductService";
 
 type Props = {
   state: ProductType;
@@ -17,6 +18,7 @@ type Props = {
 const SearchBar: FC<Props> = ({ handleStateMutation }) => {
   const [inputValue, setInputValue] = useState("");
   const [showCloseButton, setShowCloseButton] = useState(false)
+  const {fetchProductList} = useProductService()
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     const searchTerm = event.target.value;

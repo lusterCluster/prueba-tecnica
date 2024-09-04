@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 
-import ProductForm from "../components/ProductForm";
+import ProductForm from "../components/form/product/ProductForm";
 import BankingProducts from "../pages/products/BankingProducts";
+import Home from "../pages/Home";
 
 export const PATHS = {
   "/": "/",
+  "/home": "/home",
   "/products": "/products",
   "/add-product": "/add-product",
   "/edit-product": "/edit-product",
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
   {
     path: PATHS["/"],
     element: <App />,
+  },
+  {
+    path: PATHS["/home"],
+    element: <Home/>,
+    children:[
+      
+    ]
+      
   },
 ]);
 

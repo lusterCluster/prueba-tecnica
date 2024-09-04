@@ -7,7 +7,7 @@ import Divider from "./components/divider/Divider";
 function App() {
   return (
     <>
-      <ProvideGlobalContext>
+      
         <div className="flex justify-center  ">
           <div className="flex-col justify-center my-[10%]">
             <p className="text-[72px] font-bold hover:text-white text-center text-onSurface ">
@@ -17,7 +17,7 @@ function App() {
               Frontend – React (2024)
             </p>
             <Divider fullWidht={true} isActive="active" vertical={false} />
-            <Link className="flex justify-center my-[21px] " to={PATHS["/products"]}>
+            <Link className="flex justify-center my-[21px] " to={PATHS["/home"]}>
               <Button
                 type="button"
                 color="primary"
@@ -30,7 +30,7 @@ function App() {
             </p>
           </div>
         </div>
-      </ProvideGlobalContext>
+      
     </>
   );
 }

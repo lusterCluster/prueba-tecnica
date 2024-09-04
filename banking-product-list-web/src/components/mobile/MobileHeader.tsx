@@ -1,11 +1,11 @@
-import useTailwindClassConverter from "../../hooks/tailwind/useTailwindConverter";
 import { ProductClasses } from "../../pages/products/productClasses";
 import { Link } from "react-router-dom";
+import { convertToTailwindClass } from "../../util/tailwind/classConverter";
 
 const MobileHeader = () => {  
   return (
     <div
-      className={useTailwindClassConverter(
+      className={convertToTailwindClass(
         ProductClasses.productList.mobileHeaderContainer
       )}
     >

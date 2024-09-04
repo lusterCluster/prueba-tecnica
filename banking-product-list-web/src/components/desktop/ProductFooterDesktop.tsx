@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import DropDownPagination from "../DropDown/DropDownPagination";
+import DropDownPagination from "../dropdown/DropDownPagination";
 import { ACTIONS, ActionTypes, StateType } from "../../store/reducer/interfaces";
 import { IProduct } from "../../rest/productListService";
 import { useNavigation } from "react-router-dom";

@@ -1,58 +1,27 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IProduct, requestPOST_PUTService } from "../rest/productListService";
-import { PATHS } from "../routes/main";
-import TextField, { FormTypes } from "./TextField";
-import Button from "./buttons/Button";
+import { IProduct } from "../../../rest/productListService";
+import { PATHS } from "../../../routes/main";
+import TextField from "../../TextField";
+import Button from "../../buttons/Button";
+import { isOneYearLater } from "../../../util/date/dateValidator";
+import { toDate } from "../../../util/date/dateParser";
+import Snackbar from "../../Snackbar";
+import useSnackbar from "../../../hooks/snackbar/useSnackbar";
 import {
-  isDateGreaterOrEqual,
-  isOneYearLater,
-} from "../util/date/dateValidator";
-import { toDate } from "../util/date/dateParser";
-import { useGlobalContext } from "../store/context/Global";
-import Snackbar from "./Snackbar";
-type ValidInputTypes = {
-  id: boolean;
-  name: boolean;
-  description: boolean;
-  logo: boolean;
-  date_realese: boolean;
-  date_revision: boolean;
-};
-const ERROR_MESSAGES = {
-  "ID repetido": "ID repetido",
-  "ID es requerido": "ID es requerido",
-  "ID no puede ser menor a 3 caracteres":
-    "ID no puede ser menor a 3 caracteres",
-  "ID no puede ser mayor a 10 caracteres":
-    "ID no puede ser mayor a 10 caracteres",
-  "Nombre es requerido": "Nombre es requerido",
-  "Nombre no puede ser menor a 5 caracteres":
-    "Nombre no puede ser menor a 5 caracteres",
-  "Nombre no puede ser mayor a 100 caracteres":
-    "Nombre no puede ser mayor a 100 caracteres",
-  "Descripción es requerida": "Descripción es requerido",
-  "Descripción no puede ser menor a 10 caracteres":
-    "Descripción no puede ser menor a 10 caracteres",
-  "Descripción no puede ser mayor a 100 caracteres":
-    "Descripción no puede ser mayor a 100 caracteres",
-  "Logo es requerido": "Logo es requerido",
-  "Fecha es requerida": "Fecha es requerido",
-  "La Fecha debe ser igual o mayor a la fecha actual":
-    "La Fecha debe ser igual o mayor a la fecha actual",
-  "La Fecha debe ser exactamente un año posterior a la fecha de liberación":
-    "La Fecha debe ser exactamente un año posterior a la fecha de liberación",
-  " ": " ",
-} as const;
-export type ErrorMessageTypes = keyof typeof ERROR_MESSAGES;
-type FormErrorMessageTypes = {
-  id: ErrorMessageTypes;
-  name: ErrorMessageTypes;
-  description: ErrorMessageTypes;
-  logo: ErrorMessageTypes;
-  date_realese: ErrorMessageTypes;
-  date_revision: ErrorMessageTypes;
-};
+  ERROR_MESSAGES,
+  FormErrorMessageTypes,
+  ValidInputTypes,
+} from "./interfaces";
+import {
+  getFormType,
+  getHttpMethod,
+  validateDateRealeseBasedOnPath,
+  validateStringLength,
+  validateValues,
+} from "./productValidation";
+import useProductService from "../../../hooks/service/useProductService";
+
 const validInputs: ValidInputTypes = {
   id: true,
   name: true,
@@ -79,11 +48,9 @@ const errorMessagesInitial: FormErrorMessageTypes = {
 };
 const ProductForm = () => {
   const location = useLocation();
-  const {
-    productRequestMessage,
-    handleProductRequestMessage,
-    handldeCloseSnackBar,
-  } = useGlobalContext();
+  const { requestPOST_PUTService } = useProductService();
+  const { handldeCloseSnackBar, productRequestMessage, handleSnackbar } =
+    useSnackbar();
   const [formData, setFormData] = useState<IProduct>(
     location.pathname === PATHS["/add-product"]
       ? initialState
@@ -100,42 +67,7 @@ const ProductForm = () => {
     }
     setIsValid(validInputs);
   };
-  const validateValues = (inputValues: IProduct): ValidInputTypes => {
-    return {
-      id: Boolean(inputValues.id),
-      name: Boolean(inputValues.name),
-      description: Boolean(inputValues.description),
-      logo: Boolean(inputValues.logo),
-      date_realese: Boolean(inputValues.date_release),
-      date_revision: Boolean(inputValues.date_revision),
-    };
-  };
-  function validateStringLength(
-    str: string,
-    minLength: number,
-    maxLength: number
-  ): boolean {
-    const length = str.length;
-    return length > minLength && length < maxLength;
-  }
-  const validateDateRealeseBasedOnPath = () =>
-    location.pathname === PATHS["/add-product"]
-      ? isDateGreaterOrEqual(toDate(formData.date_release))
-      : location.pathname === PATHS["/edit-product"]
-      ? true
-      : true;
-  const getHttpMethod = () =>
-    location.pathname === PATHS["/add-product"]
-      ? "POST"
-      : location.pathname === PATHS["/edit-product"]
-      ? "PUT"
-      : "POST";
-  const getFormType = (): FormTypes =>
-    location.pathname === PATHS["/add-product"]
-      ? "add"
-      : location.pathname === PATHS["/edit-product"]
-      ? "edit"
-      : undefined;
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -154,9 +86,6 @@ const ProductForm = () => {
     Object.values(validateValues(formData)).forEach((value, i) => {
       if (value === false) {
         switch (i) {
-          case 0:
-            setErrorMessage((prev) => ({ ...prev, id: "ID es requerido" }));
-            break;
           case 0:
             setErrorMessage((prev) => ({ ...prev, id: "ID es requerido" }));
             break;
@@ -194,14 +123,16 @@ const ProductForm = () => {
       }
     });
     send = validateStringLength(formData.id, 3, 10) ? true : false;
-    if (!send) {
+    if (!send && getHttpMethod() === "POST" ) {
       setIsValid((prev) => ({ ...prev, id: false }));
       setErrorMessage((prev) => ({
         ...prev,
         id:
           formData.id.length < 3
             ? ERROR_MESSAGES["ID no puede ser menor a 3 caracteres"]
-            : ERROR_MESSAGES["ID no puede ser mayor a 10 caracteres"],
+            : formData.id.length > 10
+            ? ERROR_MESSAGES["ID no puede ser mayor a 10 caracteres"]
+            : " ",
       }));
     }
     send = validateStringLength(formData.name, 5, 100) ? true : false;
@@ -212,7 +143,9 @@ const ProductForm = () => {
         name:
           formData.name.length < 5
             ? ERROR_MESSAGES["Nombre no puede ser menor a 5 caracteres"]
-            : ERROR_MESSAGES["Nombre no puede ser mayor a 100 caracteres"],
+            : formData.name.length > 100
+            ? ERROR_MESSAGES["Nombre no puede ser mayor a 100 caracteres"]
+            : " ",
       }));
     }
     send = validateStringLength(formData.description, 10, 200) ? true : false;
@@ -223,10 +156,12 @@ const ProductForm = () => {
         description:
           formData.description.length < 10
             ? ERROR_MESSAGES["Descripción no puede ser menor a 10 caracteres"]
-            : ERROR_MESSAGES["Descripción no puede ser mayor a 100 caracteres"],
+            : formData.description.length > 200
+            ? ERROR_MESSAGES["Descripción no puede ser mayor a 200 caracteres"]
+            : " ",
       }));
     }
-    send = validateDateRealeseBasedOnPath();
+    send = validateDateRealeseBasedOnPath(formData);
 
     if (!send) {
       setIsValid((prev) => ({ ...prev, date_realese: false }));
@@ -253,10 +188,10 @@ const ProductForm = () => {
         const result = await requestPOST_PUTService(
           formData,
           getHttpMethod()
-        ).then(() => handleProductRequestMessage(getHttpMethod(), false));
+        ).then(() => handleSnackbar(getHttpMethod(), false));
         console.log("Producto añadido con éxito:", result);
       } catch (error) {
-        handleProductRequestMessage(getHttpMethod(), true);
+        handleSnackbar(getHttpMethod(), true);
       }
     } else {
       console.log("invalid inputs");
@@ -289,6 +224,7 @@ const ProductForm = () => {
           <TextField
             form={getFormType()}
             errorMessage={errorMessage.id}
+            disabled={getHttpMethod() === "POST" ? false : true}
             isValid={isValid["id"]}
             type="text"
             name="id"
@@ -297,7 +233,7 @@ const ProductForm = () => {
           />
           <TextField
             form={getFormType()}
-            errorMessage={errorMessage.name}
+            errorMessage={errorMessage.name}            
             isValid={isValid["name"]}
             type="text"
             name="name"
@@ -306,7 +242,7 @@ const ProductForm = () => {
           />
           <TextField
             form={getFormType()}
-            errorMessage={errorMessage.description}
+            errorMessage={errorMessage.description}            
             isValid={isValid["description"]}
             type="text"
             name="description"
@@ -315,7 +251,7 @@ const ProductForm = () => {
           />
           <TextField
             form={getFormType()}
-            errorMessage={errorMessage.logo}
+            errorMessage={errorMessage.logo}            
             isValid={isValid["logo"]}
             type="text"
             name="logo"
@@ -324,7 +260,7 @@ const ProductForm = () => {
           />
           <TextField
             form={getFormType()}
-            errorMessage={errorMessage.date_realese}
+            errorMessage={errorMessage.date_realese}            
             isValid={isValid["date_realese"]}
             type="date"
             name="date_release"
@@ -333,7 +269,7 @@ const ProductForm = () => {
           />
           <TextField
             form={getFormType()}
-            errorMessage={errorMessage.date_revision}
+            errorMessage={errorMessage.date_revision}            
             isValid={isValid["date_revision"]}
             type="date"
             name="date_revision"
