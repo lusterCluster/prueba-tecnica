@@ -1,14 +1,8 @@
+import { HTTPMethods, IProduct } from "./interfaces";
+
 const apiUrl =
   "https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros/bp/products/";
-export type HTTPMethods = "POST" | "PUT" | "GET" | "DELETE";
-export interface IProduct {
-  id: string;
-  name: string;
-  description: string;
-  logo: string;
-  date_release: string;
-  date_revision: string;
-}
+
 function useProductService() {
   const fetchProductList = async () => {
     const response = await fetch(apiUrl!, {
@@ -47,7 +41,28 @@ function useProductService() {
     const data: IProduct = await response.json();
     return data;
   }
-  return { fetchProductList, requestPOST_PUTService };
+  async function deleteProduct(id: string): Promise<void> {
+    const url = apiUrl + id;
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'AuthorId': localStorage.getItem("authorId") ?? "0"
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      console.log(`Item with ID ${id} was successfully deleted.`);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  }
+
+  return { fetchProductList, requestPOST_PUTService, deleteProduct };
 }
 
 

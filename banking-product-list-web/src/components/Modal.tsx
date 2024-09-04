@@ -1,9 +1,9 @@
 import { FC } from "react";
 import Button from "./buttons/Button";
-import { deleteProduct } from "../rest/productListService";
 
 import Snackbar from "./Snackbar";
 import useSnackbar from "../hooks/snackbar/useSnackbar";
+import useProductService from "../hooks/service/useProductService";
 
 type Props = {
   isOpen: boolean;
@@ -13,6 +13,7 @@ type Props = {
 };
 
 const Modal: FC<Props> = ({ isOpen, productName, onClose, id }) => {
+  const {deleteProduct} = useProductService()
   const { handleSnackbar, handldeCloseSnackBar, productRequestMessage } =
     useSnackbar();
   const handleDelete = async () => {

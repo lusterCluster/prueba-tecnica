@@ -12,8 +12,9 @@ const Home = () => {
   };
 
   return (
-    <div className="grid place-items-center ">
-      <div className="grid place-items-center gap-10 bg-secondaryOnSurface p-[21px] w-[420px]" >
+    <div className="grid place-items-center grid-rows-6 bg-onSurface h-screen mx-[5%]">
+      <p className="text-white text-[32px]"> BANKING PRODUCT LIST APP   </p>
+      <div className="grid place-items-center gap-10  p-[21px] max-w-[1020px]" >
 
       {Object.values(AUTHORS).map((a, i) => (
         <div key={i + ""}>
