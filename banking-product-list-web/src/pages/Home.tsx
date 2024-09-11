@@ -1,15 +1,24 @@
 import Button from "../components/buttons/Button";
 import { AUTHORS, AuthorTypes } from "../hooks/service/interfaces";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { PATHS } from "../routes/main";
 import useAuthor from "../hooks/service/useAuthor";
+import { useContext, useEffect } from "react";
+import { GlobalContext } from "../store/context/Global";
+
 
 const Home = () => {
   const { getAuthorId } = useAuthor();
+  const Global = useContext(GlobalContext)
 
   const handleChangeAuthor = (authorType: AuthorTypes) => {
-    localStorage.setItem("authorId", getAuthorId(authorType)[authorType]!);
+    localStorage.setItem("authorId", getAuthorId(authorType)[authorType]!);    
+    Global!.handleFetchProductList()
+      
   };
+
+
+
 
   return (
     <div className="grid place-items-center grid-rows-6 bg-onSurface h-screen mx-[5%]">

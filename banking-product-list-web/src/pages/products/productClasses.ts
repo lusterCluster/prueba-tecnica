@@ -19,3 +19,15 @@ export const ProductClasses = {
 
     }
 }
+
+export const BankingProductsStyles = {
+    desktop: {
+      productList: {
+        footer: {
+          container: {marginTop: '21px', marginBottom:'21px'},
+          flexContainer: {display: "flex", justifyContent:"space-between"},
+        }
+      }
+    }
+  }
+

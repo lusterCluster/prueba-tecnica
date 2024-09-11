@@ -1,6 +1,7 @@
 import { ProductClasses } from "../../pages/products/productClasses";
 import { Link } from "react-router-dom";
 import { convertToTailwindClass } from "../../util/tailwind/classConverter";
+import SearchBar from "../SearchBar";
 
 const MobileHeader = () => {  
   return (
@@ -9,7 +10,7 @@ const MobileHeader = () => {
         ProductClasses.productList.mobileHeaderContainer
       )}
     >
-      <div id="searchbar-portal-mobile"></div>
+      <SearchBar/>
       <Link to={"/add-product"}>
         <p          
           className="material-symbols-sharp text-[24px] text-white stretc"

@@ -1,15 +1,17 @@
 import { IProduct, ProductType } from "../../rest/productListService";
 import { PATHS } from "../../routes/main";
+import { GlobalContext } from "../../store/context/Global";
 import ProductDesktop from "./ProductDesktop";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Link } from "react-router-dom";
+import SearchBar from "../SearchBar";
 
 const ListBar = () => {
   return (
     <>
       <div className="col-span-6 w-full flex justify-between">
         <span className="flex gap-[13px]">
-            <div id="searchbar-portal"></div>
+            <SearchBar/>
           <Link to={PATHS["/home"]}>
           <span className="material-symbols-sharp text-primary text-[34px] ">
             home
@@ -45,16 +47,15 @@ const Header = () => {
     </div>
   );
 };
-type Props = {
-  productList: ProductType;
-};
-const ProductListDesktop: FC<Props> = ({ productList }) => {
+
+const ProductListDesktop = () => {
+  const Global = useContext(GlobalContext)
   return (
     <>
       <ListBar />
       <Header />
       <div id="grid" className="grid gap-y-2 grid-cols-6 ">
-        {productList.map((product: IProduct) => (
+        {Global!.state.map((product: IProduct) => (
           <div
             key={product.id}
             className="grid grid-cols-12 col-span-6 place-items-center border-[0.5px] border-solid border-onSurface"

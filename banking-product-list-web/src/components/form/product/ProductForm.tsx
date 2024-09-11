@@ -188,7 +188,7 @@ const ProductForm = () => {
         const result = await requestPOST_PUTService(
           formData,
           getHttpMethod()
-        ).then(() => handleSnackbar(getHttpMethod(), false));
+        ).then(() => {  handleSnackbar(getHttpMethod(), false)});
         console.log("Producto añadido con éxito:", result);
       } catch (error) {
         handleSnackbar(getHttpMethod(), true);

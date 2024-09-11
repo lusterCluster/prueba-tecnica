@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useContext, useState } from "react";
 import { ACTIONS, ActionTypes } from "../store/reducer/interfaces";
 import {
   
@@ -6,23 +6,19 @@ import {
   ProductType,
 } from "../rest/productListService";
 import useProductService from "../hooks/service/useProductService";
+import { GlobalContext } from "../store/context/Global";
 
-type Props = {
-  state: ProductType;
-  handleStateMutation: (
-    payload: string | IProduct[],
-    type: ActionTypes
-  ) => void;
-};
 
-const SearchBar: FC<Props> = ({ handleStateMutation }) => {
+
+const SearchBar  = () => {
+  const Global = useContext(GlobalContext)
   const [inputValue, setInputValue] = useState("");
   const [showCloseButton, setShowCloseButton] = useState(false)
   const {fetchProductList} = useProductService()
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     const searchTerm = event.target.value;
-    handleStateMutation(searchTerm, ACTIONS.FILTER);
+    Global!.dispatch(searchTerm, ACTIONS.FILTER);
   };
   const handleOnFocus = () => { console.log("on focus"); setShowCloseButton(true)}
   const handleCleanSearch = () => {
@@ -30,7 +26,7 @@ const SearchBar: FC<Props> = ({ handleStateMutation }) => {
     fetchProductList()
       .then((products) => {
         console.log("handleCleanSearch called");
-        handleStateMutation([...products], ACTIONS.FETCH); // Llenar el estado con los productos
+        Global!.dispatch([...products], ACTIONS.FETCH); // Llenar el estado con los productos
       }).finally(() => setShowCloseButton(false))
       .catch((error) => {
         console.error("Error:", error);

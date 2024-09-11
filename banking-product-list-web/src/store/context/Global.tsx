@@ -1,61 +1,75 @@
 import React, {
   createContext,
+  Dispatch,
   FC,
-  useContext,
-  useEffect,
+  SetStateAction,  
+  useEffect,  
   useState,
 } from "react";
 import {  
+  fetchProductList,
   IProduct,
   ProductType,
 } from "../../rest/productListService";
 import useMutation from "../reducer/useMutation";
-import { ACTIONS } from "../reducer/interfaces";
-import useSnackbar from "../../hooks/snackbar/useSnackbar";
-import { AUTHORS } from "../../hooks/service/interfaces";
+import { ACTIONS, ActionTypes, StateType } from "../reducer/interfaces";
 import useProductService from "../../hooks/service/useProductService";
+import useSnackbar from "../../hooks/snackbar/useSnackbar";
+
 
 const placeholder: ProductType = [];
 
-export const GlobalContext = createContext(placeholder);
-const useProvideContext = () => useContext(GlobalContext);
-export const useGlobalContext = () => {
-  const { state, handleStateMutation } = useMutation<IProduct[]>(placeholder);
-  const [loading, setloading] = useState(false);
-  const {handleSnackbar} = useSnackbar()
-const {fetchProductList} = useProductService()
 
-useEffect(() => {
-      setloading(true);
-      console.log(localStorage.getItem("authorId"))
-      // setAuthor(localStorage.getItem("authorId") as AuthorTypes)
-      fetchProductList()
-        .then((products) => {          
-          handleStateMutation([...products], ACTIONS.FETCH);
-        })
-        .finally(() => {
-          setloading(false);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          handleSnackbar("GET", true);
-        });
-    
-  }, []);
-  return {
-    state,  
-    handleStateMutation,    
-    loading,
-    setloading
-  };
-};
+export const GlobalDispatchContext = createContext(null);
+
 type ProviderProps = {
   children: React.ReactNode;
 };
+type GlobalType = {
+  state: StateType<IProduct>
+  dispatch: (payload: IProduct[] | any, type: ActionTypes) => void,
+  loading: boolean
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  handleFetchProductList: () => void
+}
+
+export const GlobalContext = createContext<GlobalType|null>(null);
 const ProvideGlobalContext: FC<ProviderProps> = ({ children }) => {
-  const context = useProvideContext();
+  const { state, handleStateMutation } = useMutation<IProduct[]>(placeholder);
+  const [loading, setloading] = useState(false);
+  const {fetchProductList} = useProductService()
+  const {handleSnackbar} = useSnackbar()
+  const handleFetchProductList = () => {
+    Global!.setLoading(true)
+    console.log(localStorage.getItem("authorId"))      
+    fetchProductList()
+    .then((products) => {          
+      Global!.dispatch([...products], ACTIONS.FETCH);
+    })
+    .finally(() => {
+      Global!.setLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      handleSnackbar("GET", true);
+    });
+  }
+  const Global:GlobalType = {
+    state: state,
+    dispatch: handleStateMutation,
+    loading: loading,
+    setLoading: setloading,
+    handleFetchProductList: handleFetchProductList
+  }
+useEffect(() => {
+  handleFetchProductList()
+  
+}, [])
+  if ( Global === null || Global.loading) {
+    return <>Loading ...</>;
+  }
   return (
-    <GlobalContext.Provider value={context}>{children}</GlobalContext.Provider>
+    <GlobalContext.Provider value={Global}>{children}</GlobalContext.Provider>
   );
 };
 export default ProvideGlobalContext;

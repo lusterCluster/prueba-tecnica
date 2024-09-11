@@ -46,9 +46,10 @@ function useProductService() {
     try {
       const response = await fetch(url, {
         method: 'DELETE',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
-          'AuthorId': localStorage.getItem("authorId") ?? "0"
+          'AuthorId': localStorage.getItem("authorId") ?? "0",          
         },
       });
   
